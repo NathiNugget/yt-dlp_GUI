@@ -1,15 +1,24 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage; 
+import java.awt.event.ActionListener; 
 
 
 public class GUI {
 
     public GUI(){
         JFrame frame = new JFrame("yt-dlp with GUI by Nathaniel Finn Michel Risum");
-        frame.setIconImage(new ImageIcon(".\\yt.png").getImage());
+        Image icon;
+        try {
+            
+            icon = ImageIO.read(getClass().getResource("rsc/yt.png"));
+            frame.setIconImage(icon);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }  
+        
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
         
@@ -27,7 +36,10 @@ public class GUI {
        
        
         JButton mp3 = new JButton("CLICK FOR AUDIO DOWNLOAD"); 
+        
         JButton mp4 = new JButton("CLICK FOR VIDEO DOWNLOAD"); 
+        mp4.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
         JButton update = new JButton("UPDATE YT-DLP"); 
 
         mp3.addActionListener(new ActionListener() {
@@ -58,7 +70,7 @@ public class GUI {
         panel.add(plug);
         panel.add(announcement); // Adds Button to content pane of frame
         panel.add(text);
-        panel.add(mp3);
+        panel.add(mp3); 
         panel.add(mp4);
         panel.add(update);
         
@@ -68,8 +80,6 @@ public class GUI {
 
 
     }
-        public static void main(String[] args) {
-            GUI gui = new GUI(); 
-        }
+        
     
 }
