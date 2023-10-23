@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Paths;
 
 public class CLItest {
 
@@ -29,22 +30,21 @@ public class CLItest {
                         previous = null; 
                     }
                     else break;
-                    
-
 
                 } 
-                // else if (line.contains("Available version:")){
-                //     try {
-                //         line.wait(10000);
-                //     } catch (InterruptedException e) {
-                //         // TODO Auto-generated catch block
-                //         e.printStackTrace();
-                //     }
-                // }
-                System.out.println(line);
                 
+                // System.out.println(line);
+                GUI.setResult(previous);
+                if (line != null && line != previous){
+                    GUI.setResult(line); 
+                }
+                if (!(line == null)) GUI.setResult(line);
+                previous = line; 
                 i++; 
+                
             }
+            GUI.showPath(); 
+            
             
         } catch (IOException e) {
             e.printStackTrace();
