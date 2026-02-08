@@ -9,15 +9,13 @@ public class GUI {
 
     private static JTextArea result;
     private static int count;
-    private static String save_path = System.getProperty("user.home");
+
 
     public GUI() {
-        try {
-            CLItest.updateYT();
-        } catch (updateException e) {
-        }
-        count = 0;
         JFrame frame = new JFrame("yt-dlp with GUI by Nathaniel Finn Michel Risum");
+        
+        count = 0;
+        
         Image icon;
         try {
 
@@ -61,16 +59,33 @@ public class GUI {
 
         mp3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
+                setResult("Download is starting shortly, please wait...");
+                new SwingWorker<Void, Void>() {
 
-                CLItest.downloadElement(new String[] { text.getText().replaceAll(" ", ""), "MP3" });
-
+                    @Override
+                    protected Void doInBackground() throws Exception {
+                        CLIBridge.downloadElement(new String[] { text.getText().replaceAll(" ", ""), "MP3" });
+                        return null;
+                    }
+                    
+                }.execute();
             }
         });
         mp4.addActionListener(new ActionListener() {
+            
             public void actionPerformed(ActionEvent evt) {
-                CLItest.downloadElement(new String[] { text.getText().replaceAll(" ", ""), "MP4" });
+                setResult("Download is starting shortly, please wait...");
+                new SwingWorker<Void, Void>() {
+
+                    @Override
+                    protected Void doInBackground() throws Exception {
+                        CLIBridge.downloadElement(new String[] { text.getText().replaceAll(" ", ""), "MP4" });
+                        return null;
+                    }
+                    
+                }.execute();
             }
-        });
+        }); 
 
         plug.setMaximumSize(new Dimension(10000, 50));
         announcement.setMaximumSize(new Dimension(10000, 40));
