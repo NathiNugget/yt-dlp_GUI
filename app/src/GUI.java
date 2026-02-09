@@ -57,9 +57,9 @@ public class GUI {
         announcement.setWrapStyleWord(true);
         announcement.setFont(new Font("Verdana", 0, 12));
 
-        JButton mp3 = new JButton("CLICK FOR AUDIO DOWNLOAD");
+        JButton mp3 = new JButton("♫ CLICK FOR AUDIO DOWNLOAD ♫");
 
-        JButton mp4 = new JButton("CLICK FOR VIDEO DOWNLOAD");
+        JButton mp4 = new JButton("🎬 CLICK FOR VIDEO DOWNLOAD 🎬");
         mp4.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         mp3.addActionListener(new ActionListener() {
