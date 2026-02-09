@@ -1,6 +1,9 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.file.Paths;
@@ -9,13 +12,13 @@ public class GUI {
 
     private static JTextArea result;
     private static int count;
-
+    private JScrollPane scrollPn;
 
     public GUI() {
         JFrame frame = new JFrame("yt-dlp with GUI by Nathaniel Finn Michel Risum");
-        
+
         count = 0;
-        
+
         Image icon;
         try {
 
@@ -37,20 +40,22 @@ public class GUI {
         JTextArea plug = new JTextArea(
                 " This GUI is developed, published and updated by Nathaniel Finn Michel Risum.\n Find me at GitHub: NathiNugget or by mail: nathaniel.riusm2@gmail.com\n Link to GitHub repository to download the newest release: https://github.com/NathiNugget/yt-dlp_GUI.git");
         plug.setEditable(false);
-        plug.setFont(new Font("Comic Sans MS", 0, 14));
+        plug.setFont(new Font("Comic Sans MS", 0, 8));
 
-        JTextField announcement = new JTextField(
-                "Insert URL in the text-field below, then click either button below in order to download an MP3 or MP4");
+        JTextArea announcement = new JTextArea(
+                "Copy the link to a YouTube video, then click either button below in order to download an MP3 or MP4.\nThe file will be saved in the folder/place the program is run from");
         announcement.setEditable(false);
-        JTextField text = new JTextField("");
 
         result = new JTextArea("");
         result.setEditable(false);
+        scrollPn = new JScrollPane(result);
+        scrollPn.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPn.setAutoscrolls(true);
+        scrollPn.setPreferredSize(new Dimension(400, 400));
 
         announcement.setBackground(new Color(240, 240, 240));
-        announcement.setHorizontalAlignment((int) JTextField.CENTER_ALIGNMENT);
+        announcement.setWrapStyleWord(true);
         announcement.setFont(new Font("Verdana", 0, 12));
-        text.setBackground(new Color(143, 217, 251));
 
         JButton mp3 = new JButton("CLICK FOR AUDIO DOWNLOAD");
 
@@ -59,46 +64,81 @@ public class GUI {
 
         mp3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                setResult("Download is starting shortly, please wait...");
-                new SwingWorker<Void, Void>() {
 
-                    @Override
-                    protected Void doInBackground() throws Exception {
-                        CLIBridge.downloadElement(new String[] { text.getText().replaceAll(" ", ""), "MP3" });
-                        return null;
-                    }
-                    
-                }.execute();
+                try { // This gets a string from clipboard
+                    final String txt = (String) Toolkit.getDefaultToolkit()
+                            .getSystemClipboard().getData(DataFlavor.stringFlavor);
+                    if (txt.equals(""))
+                        return;
+                    setResult("Download is starting shortly, please wait...");
+                    new SwingWorker<Void, Void>() {
+
+                        @Override
+                        protected Void doInBackground() throws Exception {
+                            String text = validateText(txt);
+                            CLIBridge.downloadElement(new String[] { text, "MP3" });
+                            return null;
+                        }
+
+                    }.execute();
+                } catch (Exception e) {
+                    System.out.println(e.getStackTrace());
+                }
+
             }
         });
         mp4.addActionListener(new ActionListener() {
-            
             public void actionPerformed(ActionEvent evt) {
-                setResult("Download is starting shortly, please wait...");
-                new SwingWorker<Void, Void>() {
 
-                    @Override
-                    protected Void doInBackground() throws Exception {
-                        CLIBridge.downloadElement(new String[] { text.getText().replaceAll(" ", ""), "MP4" });
-                        return null;
-                    }
-                    
-                }.execute();
+                try { // This gets a string from clipboard
+                    final String txt = (String) Toolkit.getDefaultToolkit()
+                            .getSystemClipboard().getData(DataFlavor.stringFlavor);
+                    if (txt.equals(""))
+                        return;
+                    setResult("Download is starting shortly, please wait...");
+                    new SwingWorker<Void, Void>() {
+
+                        @Override
+                        protected Void doInBackground() throws Exception {
+                            String text = validateText(txt);
+                            CLIBridge.downloadElement(new String[] { text, "MP4" });
+                            return null;
+                        }
+
+                    }.execute();
+                } catch (Exception e) {
+                    System.out.println(e.getStackTrace());
+                }
+
             }
-        }); 
+        });
 
         plug.setMaximumSize(new Dimension(10000, 50));
-        announcement.setMaximumSize(new Dimension(10000, 40));
-        text.setMaximumSize(new Dimension(600, 30));
+        announcement.setMaximumSize(new Dimension(700, 200));
+
+        announcement.setBorder(new EmptyBorder(50, 0, 0, 0));
+        buttonPanel.setBorder(new EmptyBorder(40, 0, 0, 0));
+
         panel.add(plug);
         panel.add(announcement); // Adds Button to content pane of frame
-        panel.add(text);
         buttonPanel.add(mp3);
         buttonPanel.add(mp4);
         panel.add(buttonPanel);
-        panel.add(result);
+        panel.add(scrollPn);
         frame.getContentPane().add(panel);
         frame.setVisible(true);
+    }
+
+    private String validateText(String text) throws Exception {
+        if (!text.contains("watch"))
+            throw new Exception("This was not a YouTube-link");
+
+        int idx = text.indexOf('&');
+        if (-1 != idx)
+            return text.substring(0, idx).replaceAll(" ", "");
+
+        return text.toString().replaceAll(" ", "");
+
     }
 
     public static void setResult(String s) {
