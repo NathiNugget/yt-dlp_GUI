@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -14,11 +15,14 @@ public class CLIBridge {
             if (stringArr[1].equals("MP4")) {
                 pb = new ProcessBuilder("cmd.exe", "/c", "yt-dlp.exe --remux-video mp4 -o \"%(title)s\" ",
                         stringArr[0]);
+                        
+
             } else { // The added .mp3 file extension is on purpose
                 pb = new ProcessBuilder("cmd.exe", "/c", "yt-dlp.exe -f \"ba\" -o \"%(title)s.mp3\" ",
                         stringArr[0]);
             }
 
+            pb.directory(new File(System.getProperty("user.dir")));
             pb.redirectErrorStream(true);
             Process p = pb.start();
             BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -29,7 +33,7 @@ public class CLIBridge {
             while (true) {
                 line = r.readLine();
                 if (line == null) {
-                    if (previous != null) {
+                    if (null != previous) {
                         previous = null;
                     } else
                         break;

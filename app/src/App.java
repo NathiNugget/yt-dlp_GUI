@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 public class App {
     public static void main(String[] args) throws Exception {
         try {
-            GUI gui = new GUI();
+            new GUI();
             System.out.println("Application started successfully.");
         } catch (Exception e) {
             try (PrintWriter out = new PrintWriter(new FileWriter("error_log.txt", true))) {
