@@ -13,12 +13,12 @@ public class CLIBridge {
         try {
             Runtime runTime = Runtime.getRuntime();
             if (stringArr[1].equals("MP4")) {
-                pb = new ProcessBuilder("cmd.exe", "/c", "yt-dlp.exe --remux-video mp4 -o \"%(title)s\" ",
+                pb = new ProcessBuilder("cmd.exe", "/c", "yt-dlp.exe -f ba+bv -t mp4 --embed-subs --sub-lang \"en.*, da.*\" -o \"%(title)s\"",
                         stringArr[0]);
                         
 
             } else { // The added .mp3 file extension is on purpose
-                pb = new ProcessBuilder("cmd.exe", "/c", "yt-dlp.exe -f \"ba\" -o \"%(title)s.mp3\" ",
+                pb = new ProcessBuilder("cmd.exe", "/c", "yt-dlp.exe -f \"ba\" -o \"%(title)s.mp3\"",
                         stringArr[0]);
             }
 

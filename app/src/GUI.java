@@ -48,10 +48,10 @@ public class GUI {
 
         result = new JTextArea("");
         result.setEditable(false);
-        scrollPn = new JScrollPane(result);
+        scrollPn = new JScrollPane(result, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollPn.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPn.setAutoscrolls(true);
-        scrollPn.setPreferredSize(new Dimension(400, 400));
+        //scrollPn.setPreferredSize(new Dimension(400, 400));
 
         announcement.setBackground(new Color(240, 240, 240));
         announcement.setWrapStyleWord(true);
@@ -156,6 +156,12 @@ public class GUI {
                 } else {
                     if (!(s == null) && !s.equals(previous))
                         result.setText(result.getText() + "\n" + s);
+                        int pos = result.getText().lastIndexOf("\n"); 
+                        result.setCaretPosition(result.getDocument().getLength());
+                        
+                        System.out.println(result.getText().lastIndexOf("\n"));
+                        
+
                 }
 
             }
