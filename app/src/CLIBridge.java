@@ -3,7 +3,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-
 public class CLIBridge {
 
     public static void downloadElement(String[] args) {
@@ -11,11 +10,10 @@ public class CLIBridge {
         String[] stringArr = args;
         ProcessBuilder pb;
         try {
-            Runtime runTime = Runtime.getRuntime();
             if (stringArr[1].equals("MP4")) {
-                pb = new ProcessBuilder("cmd.exe", "/c", "yt-dlp.exe -f ba+bv -t mp4 --embed-subs --sub-lang \"en.*, da.*\" -o \"%(title)s\"",
+                pb = new ProcessBuilder("cmd.exe", "/c",
+                        "yt-dlp.exe -f ba+bv -t mp4 --embed-subs --sub-lang \"en.*, da.*\" -o \"%(title)s\"",
                         stringArr[0]);
-                        
 
             } else { // The added .mp3 file extension is on purpose
                 pb = new ProcessBuilder("cmd.exe", "/c", "yt-dlp.exe -f \"ba\" -o \"%(title)s.mp3\"",
@@ -28,27 +26,24 @@ public class CLIBridge {
             BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String line;
             String previous = "";
-
-            Long i = 0L;
+            int idxOfPercentage = 0;
             while (true) {
                 line = r.readLine();
+
                 if (line == null) {
-                    if (null != previous) {
+                    if (previous != null) {
                         previous = null;
                     } else
                         break;
 
                 }
-
-                // System.out.println(line);
+                
+                System.out.println(line);
                 GUI.setResult(previous);
-                if (line != null && line != previous) {
-                    GUI.setResult(line);
-                }
-                if (!(line == null))
+
+                if ((line != null))
                     GUI.setResult(line);
                 previous = line;
-                i++;
 
             }
             GUI.showPath();

@@ -13,6 +13,9 @@ public class GUI {
     private static JTextArea result;
     private static int count;
     private JScrollPane scrollPn;
+    public static JScrollBar vertical;
+    public static JScrollBar horizontal;
+    public static JProgressBar progressBar;
 
     public GUI() {
         JFrame frame = new JFrame("yt-dlp with GUI by Nathaniel Finn Michel Risum");
@@ -48,14 +51,19 @@ public class GUI {
 
         result = new JTextArea("");
         result.setEditable(false);
-        scrollPn = new JScrollPane(result, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollPn = new JScrollPane(result, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollPn.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPn.setAutoscrolls(true);
-        //scrollPn.setPreferredSize(new Dimension(400, 400));
+        horizontal = scrollPn.createHorizontalScrollBar();
+        vertical = scrollPn.createVerticalScrollBar();
 
         announcement.setBackground(new Color(240, 240, 240));
         announcement.setWrapStyleWord(true);
         announcement.setFont(new Font("Verdana", 0, 12));
+        progressBar = new JProgressBar(0, 100); 
+        progressBar.setString("Waiting for download...");
+        progressBar.setStringPainted(true);
 
         JButton mp3 = new JButton("♫ CLICK FOR AUDIO DOWNLOAD ♫");
 
@@ -130,8 +138,17 @@ public class GUI {
     }
 
     private String validateText(String text) throws Exception {
-        if (!text.contains("watch"))
+        if (!text.contains("watch")){
+            if (text.contains("https://youtu.be")){
+                int idxOfSiParam = text.indexOf("?"); 
+                if (idxOfSiParam == -1){
+                    return text; 
+                }
+                return text.substring(0, idxOfSiParam);
+            }
             throw new Exception("This was not a YouTube-link");
+        }
+            
 
         int idx = text.indexOf('&');
         if (-1 != idx)
@@ -156,22 +173,26 @@ public class GUI {
                 } else {
                     if (!(s == null) && !s.equals(previous))
                         result.setText(result.getText() + "\n" + s);
-                        int pos = result.getText().lastIndexOf("\n"); 
-                        result.setCaretPosition(result.getDocument().getLength());
-                        
-                        System.out.println(result.getText().lastIndexOf("\n"));
-                        
+                    int pos = result.getText().lastIndexOf("\n");
+                    result.setCaretPosition(result.getDocument().getLength());
 
                 }
 
             }
-            count++;
+            vertical.setValue(vertical.getMaximum());
+            horizontal.setValue(horizontal.getMaximum());
 
         }
     }
 
     public static void showPath() {
-        result.setText(result.getText() + "\nFile saved to: " + Paths.get(".").toAbsolutePath().normalize().toString());
+        String output = result.getText() + "\nFile saved to: " + Paths.get(".").toAbsolutePath().normalize().toString(); 
+        System.out.println("DEBUG: " + output);
+        result.setText(output);
+        vertical.setValue(vertical.getMaximum()+1);
+
+        horizontal.setValue(horizontal.getMinimum());
+
     }
 
 }
